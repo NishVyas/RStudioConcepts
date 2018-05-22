@@ -1,0 +1,75 @@
+---
+title: "Regresssion"
+author: "Nishant Vyas"
+date: "May 21, 2018"
+output: html_document
+---
+### Regression 
+Lets Start with Simple Linear Regression.
+Lets Load the MASS package (very large collection of data sets/functions) and the ISLR package (includes data sets associated with the textbook).
+
+```{r}
+library(MASS)
+library(ISLR)
+library(ggplot2)
+```
+
+Lets work with Simple Linear Regression first. MASS contains the "Boston" data set. Lets try to predict medv (median house value) using 13 predictors.
+
+```{r}
+fix(Boston)
+names(Boston)
+```
+
+Lets fit a simple linear regression using lm(). The "medv" variable is the response and "lstat" (% of households with low socioeconomic incomes) as the predictor.
+
+```{r}
+lm.fit = lm(medv~lstat, data=Boston)
+lm.fit
+summary(lm.fit)
+```
+
+To obtain confidence interval for the coefficient estimates, use confint().
+
+```{r}
+confint(lm.fit)
+```
+
+The predict() function can be used to produce CI's and prediction intervals for the prediction of medv for given value of lstat.
+
+```{r}
+predict(lm.fit, data.frame(lstat=c(5, 10, 15)), interval = "confidence")
+```
+
+So we see from the output, the 95% CI associated w/ the lstat value of 10 is (24.47, 25.63).
+
+```{r}
+predict(lm.fit, data.frame(lstat=c(5, 10, 15)), interval = "prediction")
+```
+
+The 95% prediction interval from above for a lstat value of 10 is (12.828, 37.28).
+
+Lets plot "medv" and "lstat" w/ the least squares regression line using plot() and abline().
+
+```{r}
+plot(Boston$medv, Boston$lstat)
+abline(lm.fit, col = "red")
+```
+
+There is evidence for non-linearity in relationship between lstat and medv, we shall discuss this later.
+
+Lets look at diagnostics plots. Four of them are automatically produced by applying the plot() function directly to the output from lm(). Lets view all four of these at once. The par() function tells R to split the display screen into seperate panels so multiple plots can be viewed.
+
+```{r}
+par(mfrow=c(2,2))
+plot(lm.fit)
+```
+
+We can also compute the residuals from a linear regression fit using the residuals() function.
+
+```{r}
+plot(predict(lm.fit), residuals(lm.fit))
+```
+
+
+
